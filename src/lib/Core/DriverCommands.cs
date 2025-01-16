@@ -1,8 +1,8 @@
+using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
 
-namespace ProcExp152SysDotNetProxy.Impl;
+namespace ProcExp152SysDotNetProxy.Core;
 
 internal enum DriverCommand_IoctlCommand : uint
 {
@@ -42,13 +42,12 @@ internal static class DriverCommand_OpenProcessHandle
             Marshal.SizeOf(inPid),
             out var openedProcessHandle,
             Marshal.SizeOf(typeof(IntPtr)),
-            out var bytesReturned,
+            out _,
             IntPtr.Zero);
         if (!result)
         {
             return null;
         }
-
         return openedProcessHandle;
     }
 }
@@ -86,8 +85,8 @@ internal static class DriverCommand_GetHandleNameOrType
             Handle = handleInfo.HandleValue
         };
 
-        byte[] outBuffer = new byte[40000];
-        bool result = DeviceIoControl(
+        var outBuffer = new byte[40000];
+        var result = DeviceIoControl(
             openedDriverFile,
             (uint)ioctlCommand,
             ref data,
@@ -133,7 +132,7 @@ internal static class DriverCommand_CloseHandle
             Size = 0,
             Handle = handleInfo.HandleValue
         };
-
+        
         var res = DeviceIoControl(
             openedDriverFile,
             (uint)DriverCommand_IoctlCommand.CloseHandle,
@@ -141,10 +140,10 @@ internal static class DriverCommand_CloseHandle
             Marshal.SizeOf(typeof(DriverCommand_ProcExpDataExchange)),
             IntPtr.Zero,
             0,
-            out var bytesReturned,
+            out _,
             IntPtr.Zero);
 
-        if(!res)
+        if (!res)
         {
             throw new ProcExp152SysDotNetProxyWinApiException("DeviceIoControl", $"Failed to close handle");
         }

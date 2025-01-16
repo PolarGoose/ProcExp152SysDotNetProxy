@@ -31,6 +31,9 @@ internal class Tests
             handleNames.Add(driver.GetHandleName(h));
         }
 
+        handleTypes.Remove(null);
+        handleNames.Remove(null);
+
         Assert.That(handleTypes.Count, Is.GreaterThan(0));
         Assert.That(handleTypes, Does.Contain("Process"));
         Assert.That(handleTypes, Does.Contain("Event"));
@@ -78,7 +81,7 @@ internal class Tests
         var driver = new ProcExp152Sys();
 
         // Find the `C:\testPdfFile.pdf` handle and close it
-        bool found = false;
+        var found = false;
         foreach (var (fileName, handle) in GetAllDiskFileHandles(driver))
         {
             if (fileName == pdfFile)
@@ -92,7 +95,7 @@ internal class Tests
         Assert.That(found, Is.True, "The PDF file wasn't found in the list of handles");
 
         // Check that the handle is closed
-        foreach (var (fileName, handle) in GetAllDiskFileHandles(driver))
+        foreach (var (fileName, _) in GetAllDiskFileHandles(driver))
         {
             if (fileName == pdfFile)
             {
@@ -104,7 +107,7 @@ internal class Tests
         File.Delete(pdfFile);
     }
 
-    private IEnumerable<(string fileName, SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle)> GetAllDiskFileHandles(ProcExp152Sys io)
+    private static IEnumerable<(string fileName, SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX handle)> GetAllDiskFileHandles(ProcExp152Sys io)
     {
         var info = SystemHandlesRetriever.QuerySystemHandleInformation();
         var converter = new FileHandleNameConverter();

@@ -28,9 +28,9 @@ public sealed class FileHandleNameConverter
         for (var driveLetter = 'A'; driveLetter <= 'Z'; driveLetter++)
         {
             var deviceNameBuffer = new StringBuilder(1024);
-            string drive = $"{driveLetter}:";
+            var drive = $"{driveLetter}:";
 
-            uint length = QueryDosDevice(drive, deviceNameBuffer, (uint)deviceNameBuffer.Capacity);
+            var length = QueryDosDevice(drive, deviceNameBuffer, (uint)deviceNameBuffer.Capacity);
             if (length == 0)
             {
                 continue;
@@ -56,12 +56,12 @@ public sealed class FileHandleNameConverter
     {
         foreach (var kvp in deviceNameToDriveLetterConversionMap)
         {
-            string deviceName = kvp.Key;
-            char driveLetter = kvp.Value;
+            var deviceName = kvp.Key;
+            var driveLetter = kvp.Value;
 
             if (deviceBasedFileFullName.StartsWith(deviceName, StringComparison.OrdinalIgnoreCase))
             {
-                string relativePath = deviceBasedFileFullName.Substring(deviceName.Length);
+                var relativePath = deviceBasedFileFullName.Substring(deviceName.Length);
                 return $@"{driveLetter}:\{relativePath}";
             }
         }

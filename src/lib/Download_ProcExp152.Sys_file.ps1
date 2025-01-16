@@ -25,9 +25,22 @@ Expand-Archive -Path $buildDir/Handle.zip -DestinationPath $buildDir/Handle -For
 & $buildDir/resourcesextract/ResourcesExtract.exe /Source $buildDir\Handle\handle64.exe /DestFolder $buildDir /ExtractBinary 1 /FileExistMode 1 /OpenDestFolder 0
 CheckReturnCodeOfPreviousCommand "ResourcesExtract failed"
 
+& $buildDir/resourcesextract/ResourcesExtract.exe /Source $buildDir\Handle\handle64a.exe /DestFolder $buildDir /ExtractBinary 1 /FileExistMode 1 /OpenDestFolder 0
+CheckReturnCodeOfPreviousCommand "ResourcesExtract failed"
+
+& $buildDir/resourcesextract/ResourcesExtract.exe /Source $buildDir\Handle\handle.exe /DestFolder $buildDir /ExtractBinary 1 /FileExistMode 1 /OpenDestFolder 0
+CheckReturnCodeOfPreviousCommand "ResourcesExtract failed"
+
 # ResourcesExtract.exe works in parallel. We need to wait fot it to finish
 Start-Sleep -Seconds 2
 
 # After extraction, the file with the name handle64_103_BINRES.bin is the PROCEXP152.SYS driver
-Remove-Item -Path $buildDir/PROCEXP152.SYS -Force -ErrorAction SilentlyContinue > $null
-Rename-Item $buildDir/handle64_103_BINRES.bin -NewName PROCEXP152.SYS
+Remove-Item -Path $buildDir/PROCEXP152.SYS.x86 -Force -ErrorAction SilentlyContinue > $null
+Rename-Item $buildDir/handle_103_BINRES.bin -NewName PROCEXP152.SYS.x86
+
+Remove-Item -Path $buildDir/PROCEXP152.SYS.x64 -Force -ErrorAction SilentlyContinue > $null
+Rename-Item $buildDir/handle64_103_BINRES.bin -NewName PROCEXP152.SYS.x64
+
+Remove-Item -Path $buildDir/PROCEXP152.SYS.arm64 -Force -ErrorAction SilentlyContinue > $null
+Rename-Item $buildDir/handle64a_103_BINRES.bin -NewName PROCEXP152.SYS.arm64
+

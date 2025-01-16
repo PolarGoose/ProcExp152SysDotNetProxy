@@ -1,4 +1,4 @@
-using ProcExp152SysDotNetProxy.Impl;
+using ProcExp152SysDotNetProxy.Core;
 
 namespace ProcExp152SysDotNetProxy;
 

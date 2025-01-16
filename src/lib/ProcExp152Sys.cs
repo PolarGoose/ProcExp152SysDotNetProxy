@@ -1,11 +1,11 @@
 using Microsoft.Win32.SafeHandles;
-using ProcExp152SysDotNetProxy.Impl;
+using ProcExp152SysDotNetProxy.Core;
 
 namespace ProcExp152SysDotNetProxy;
 
 public sealed class ProcExp152Sys : IDisposable
 {
-    private SafeFileHandle openedDriverFile;
+    private readonly SafeFileHandle openedDriverFile;
 
     /// <summary>
     /// The constructor loads the driver and opens the driver file.

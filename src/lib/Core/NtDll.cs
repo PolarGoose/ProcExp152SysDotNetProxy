@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace ProcExp152SysDotNetProxy.Impl;
+namespace ProcExp152SysDotNetProxy.Core;
 
 internal static class NtDll
 {

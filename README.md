@@ -12,7 +12,7 @@ There are also helper classes for:
 * Convert file handle names to disk-based file names
 
 # Prerequisites
-* Windows x64
+* Windows x86, x64 or arm64
 
 # Examples
 ## Getting information about all handles in the system

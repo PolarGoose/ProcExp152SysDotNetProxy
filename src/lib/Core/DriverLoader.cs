@@ -1,9 +1,9 @@
 using Microsoft.Win32.SafeHandles;
-using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace ProcExp152SysDotNetProxy.Impl;
+namespace ProcExp152SysDotNetProxy.Core;
 
 internal sealed class SafeServiceHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
@@ -47,7 +47,6 @@ internal static class DriverLoader_ConnectToDriver
         {
             throw new ProcExp152SysDotNetProxyWinApiException("CreateFile", "Failed to open the driver file");
         }
-
         return driverFile;
     }
 }
@@ -156,8 +155,8 @@ internal static class DriverLoader_LoadDriver
 
 internal static class DriverLoader
 {
-    private static string driverFileFullName = Environment.ExpandEnvironmentVariables(@"%WinDir%\System32\drivers\PROCEXP152.SYS");
-    private static string driverServiceName = "PROCEXP152";
+    private static readonly string driverFileFullName = Environment.ExpandEnvironmentVariables(@"%WinDir%\System32\drivers\PROCEXP152.SYS");
+    private static readonly string driverServiceName = "PROCEXP152";
 
     public static SafeFileHandle LoadDriverAndOpenTheDriverFile()
     {
@@ -183,8 +182,27 @@ internal static class DriverLoader
         {
             return;
         }
-        using var driverFile = Assembly.GetExecutingAssembly().GetManifestResourceStream("ProcExp152SysDotNetProxy.PROCEXP152.SYS");
+
+        switch (RuntimeInformation.ProcessArchitecture)
+        {
+            case Architecture.X86:
+                ExtractResource("ProcExp152SysDotNetProxy.PROCEXP152.SYS.x86");
+                break;
+            case Architecture.X64:
+                ExtractResource("ProcExp152SysDotNetProxy.PROCEXP152.SYS.x64");
+                break;
+            case Architecture.Arm64:
+                ExtractResource("ProcExp152SysDotNetProxy.PROCEXP152.SYS.arm64");
+                break;
+            default:
+                throw new ProcExp152SysDotNetProxyException($"The processor architecture {RuntimeInformation.ProcessArchitecture} is not supported");
+        }
+    }
+
+    private static void ExtractResource(string resourceName)
+    {
+        using var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
         using var outputFile = new FileStream(driverFileFullName, FileMode.Create);
-        driverFile.CopyTo(outputFile);
+        resource.CopyTo(outputFile);
     }
 }

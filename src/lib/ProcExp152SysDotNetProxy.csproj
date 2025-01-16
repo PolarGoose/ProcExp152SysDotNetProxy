@@ -11,13 +11,15 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <!-- -->
     
-    <PreBuildEvent Condition="!Exists('$(BuildFolder)PROCEXP152.SYS')">
+    <PreBuildEvent Condition="!Exists('$(BuildFolder)PROCEXP152.SYS.x86')">
       powershell -ExecutionPolicy Bypass -File "$(MSBuildThisFileDirectory)Download_ProcExp152.Sys_file.ps1"
     </PreBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="$(BuildFolder)PROCEXP152.SYS" Visible="false" />
+    <EmbeddedResource Include="$(BuildFolder)PROCEXP152.SYS.x86" Visible="false" />
+    <EmbeddedResource Include="$(BuildFolder)PROCEXP152.SYS.x64" Visible="false" />
+    <EmbeddedResource Include="$(BuildFolder)PROCEXP152.SYS.arm64" Visible="false" />
     <None Include="../../README.md" Pack="true" PackagePath="" Visible="false" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
